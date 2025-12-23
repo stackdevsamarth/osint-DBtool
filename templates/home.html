@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>🛡️ Breach Detector V2</h1>
+<p>Check if your digital identity is compromised.</p>
+
+<div class="card">
+    <div class="tabs">
+        <div class="tab active" onclick="setMode('email')">Email</div>
+        <div class="tab" onclick="setMode('password')">Password</div>
+    </div>
+
+    <form method="POST">
+        <input type="hidden" name="type" id="inputType" value="email">
+        <input type="text" name="target" id="inputTarget" placeholder="Enter email address..." required>
+        <br>
+        <button type="submit">Analyze</button>
+    </form>
+</div>
+
+<script>
+    function setMode(mode) {
+        document.getElementById('inputType').value = mode;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const ph = mode === 'email' ? "Enter email address..." : "Enter password to check...";
+        const type = mode === 'password' ? "password" : "text";
+        const input = document.getElementById('inputTarget');
+        input.placeholder = ph;
+        input.type = type;
+    }
+</script>
+{% endblock %}

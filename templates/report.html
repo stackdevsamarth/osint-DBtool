@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Analysis Report</h1>
+
+<div class="card">
+    <h2>Target: <span style="color: var(--primary)">{{ result.target }}</span></h2>
+    <small>Type: {{ result.type|upper }}</small>
+
+    {% if result.type == "password" %}
+    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+        <div>
+            <h3>Score</h3>
+            <div style="font-size: 2em; color: {{ 'red' if result.stats.score < 50 else 'green' }}">
+                {{ result.stats.score }}/100
+            </div>
+        </div>
+        <div>
+            <h3>Crack Time</h3>
+            <div style="font-size: 1.5em;">{{ result.stats.crack_time }}</div>
+        </div>
+        <div>
+            <h3>Leaks</h3>
+            <div style="font-size: 1.5em;">{{ result.stats.leak_count }}</div>
+        </div>
+    </div>
+    <p>Entropy: {{ result.stats.entropy }} bits</p>
+    {% else %}
+    <div style="margin-top: 20px;">
+        <h3>Risk Score</h3>
+        <div style="font-size: 2.5em; color: {{ 'red' if result.stats.risk_score > 50 else 'green' }}">
+            {{ result.stats.risk_score }}/100
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card" style="text-align: left;">
+    <h3>📅 Breach Timeline</h3>
+    {% if result.breaches %}
+    <div style="border-left: 2px solid #444; padding-left: 20px; margin-left: 10px;">
+        {% for b in result.breaches %}
+        <div style="margin-bottom: 20px; position: relative;">
+            <div
+                style="position: absolute; left: -27px; top: 0; width: 12px; height: 12px; background: var(--primary); border-radius: 50%;">
+            </div>
+            <strong>{{ b.year }}</strong> - <span style="font-size: 1.1em; color: #fff;">{{ b.name }}</span><br>
+            <small style="color: #888;">Source: {{ b.source_type }} | Data: {{ b.data_leaked|join(', ') }}</small>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 40px;">
+        <h2 style="color: #00e5ff;">🎉 Congratulations! 🎉</h2>
+        <p style="font-size: 1.2em; color: #fff;">No data breaches found for this target.</p>
+        <small style="color: #aaa;">Your digital footprint appears clean.</small>
+    </div>
+    {% endif %}
+</div>
+
+<a href="/"><button style="margin-top: 20px; background: #333; color: white;">Check Another</button></a>
+{% endblock %}
